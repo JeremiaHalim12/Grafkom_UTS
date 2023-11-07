@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <title>2D Shape</title>
+    <style>
+      canvas {
+        border: 1px black solid;
+        background-color: whitesmoke;
+      }
+
+      .container {
+        padding-top: 35px;
+        position: relative;
+      }
+
+      .canvas-row {
+        margin-top: 20px;
+      }
+
+      .canvas-row1 {
+        margin-top: 45px;
+      }
+
+      .canvas-row2 {
+        margin-top: 45px;
+        margin-bottom: 45px;
+      }
+
+      .navbar {
+        position: fixed;
+        width: 100vw;
+        z-index: 1000;
+        top: 0;
+      }
+
+      body {
+        background-image: linear-gradient(to right, #ff6666 , #99ff66, #ff6666);
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">GRAFIKA KOMPUTER 2D</a>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a class="nav-link" href="index.html">Home</a>
+            <a class="nav-link active" aria-current="page" href="#"
+              >2D Shape</a
+            >
+            <a class="nav-link" href="animasi2d.html">2D Animation</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="container text-center">
+        <br>
+        <br>
+        <div class="row">
+            <div class="col"></div>
+            <div class="col">
+              <h1>2D SHAPE</h1>
+            </div>
+            <div class="col"></div>
+          </div>
+      <div class="row canvas-row">
+        <div class="col">
+          <h5>Flower</h5>
+          <canvas id="canvas1" width="350" height="350"></canvas>
+        </div>
+        <div class="col">
+          <br>
+          <br>
+          <br>
+          <h5>Sun</h5>
+          <canvas id="canvas2" width="350" height="350"></canvas>
+        </div>
+        <div class="col">
+          <h5>Spiral</h5>
+          <canvas id="canvas3" width="350" height="350"></canvas>
+        </div>
+      </div>
+      <div class="row canvas-row1">
+        <div class="col">
+          <h5>Heart</h5>
+          <canvas id="canvas4" width="350" height="350"></canvas>
+        </div>
+        <div class="col">
+          <br>
+          <br>
+          <br>
+          <h5>Cursor</h5>
+          <canvas id="canvas5" width="350" height="350"></canvas>
+        </div>
+        <div class="col">
+          <h5>Infinity</h5>
+          <canvas id="canvas6" width="350" height="350"></canvas>
+        </div>
+      </div>
+      <div class="row canvas-row2">
+        <div class="col">
+          <h5>Diamond</h5>
+          <canvas id="canvas7" width="350" height="350"></canvas>
+        </div>
+        <div class="col">
+          <br>
+          <br>
+          <br>
+          <h5>Star</h5>
+          <canvas id="canvas8" width="350" height="350"></canvas>
+        </div>
+        <div class="col">
+          <h5>Snake Eye</h5>
+          <canvas id="canvas9" width="350" height="350"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import * as lib from "./index.js";
+
+      // BUNGA
+      var canvas1 = document.querySelector("#canvas1");
+      var ctx = canvas1.getContext("2d");
+      var imageData = ctx.getImageData(0, 0, canvas1.width, canvas1.height);
+      canvas1.addEventListener('click', function (event) {
+            var rect = canvas1.getBoundingClientRect();
+            var x = event.clientX - rect.left;
+            var y = event.clientY - rect.top;
+
+            console.log(Math.round(x) + ", " + Math.round(y) + ", ");
+
+        });
+      for (var i = 0; i < 90; i++) {
+        lib.bunga(imageData, 175, 170, 100 - i, 251, 3, 133);
+      }
+      lib.lingkaran_polar(imageData, 175, 170, 25, 255, 242, 0);
+      lib.floodFillStack(
+        imageData,
+        canvas1,
+        173,
+        168,
+        { r: 251, g: 3, b: 133 },
+        { r: 255, g: 242, b: 0 }
+      );
+      ctx.putImageData(imageData, 0, 0);
+
+      // MATAHARI
+      var canvas2 = document.querySelector("#canvas2");
+      var ctx = canvas2.getContext("2d");
+      var imageData = ctx.getImageData(0, 0, canvas2.width, canvas2.height);
+      lib.matahari(imageData, 175, 175, 100, 255, 149, 0);
+      lib.floodFillStack(
+        imageData,
+        canvas2,
+        208,
+        99,
+        { r: 0, g: 0, b: 0 },
+        { r: 255, g: 149, b: 0 }
+      );
+      lib.lingkaran_polar(imageData, 175, 175, 80, 255, 242, 0);
+      lib.floodFillStack(
+        imageData,
+        canvas2,
+        189,
+        165,
+        { r: 255, g: 149, b: 0 },
+        { r: 255, g: 242, b: 0 }
+      );
+      ctx.putImageData(imageData, 0, 0);
+
+      // SPIRAL
+      var canvas3 = document.querySelector("#canvas3");
+      var ctx = canvas3.getContext("2d");
+      var imageData = ctx.getImageData(0, 0, canvas3.width, canvas3.height);
+      lib.spiral(imageData, 185, 185, 40, 255, 0, 255);
+      ctx.putImageData(imageData, 0, 0);
+
+      // HATI
+      var canvas4 = document.querySelector("#canvas4");
+      var ctx = canvas4.getContext("2d");
+      var imageData = ctx.getImageData(0, 0, canvas4.width, canvas4.height);
+      lib.hati(imageData, 177, 105, 30, 0, 255, 175);
+      lib.floodFillStack(
+        imageData,
+        canvas4,
+        206,
+        253,
+        { r: 0, g: 0, b: 0 },
+        { r: 0, g: 255, b: 175 }
+      );
+      ctx.putImageData(imageData, 0, 0);
+
+      // CURSOR
+      var canvas5 = document.querySelector("#canvas5");
+      var ctx = canvas5.getContext("2d");
+      var imageData = ctx.getImageData(0, 0, canvas5.width, canvas5.height);
+      let point_array = [
+        { x: 100, y: 100 },
+        { x: 250, y: 200 },
+        { x: 250, y: 250 },
+        { x: 200, y: 250 },
+      ];
+      lib.polygon(imageData, point_array, 255, 0, 0);
+      lib.floodFillStack(
+        imageData,
+        canvas5,
+        194,
+        187,
+        { r: 0, g: 0, b: 0 },
+        { r: 255, g: 0, b: 0 }
+      );
+      ctx.putImageData(imageData, 0, 0);
+
+      // INFINITY
+      var canvas6 = document.querySelector("#canvas6");
+      var ctx = canvas6.getContext("2d");
+      var imageData = ctx.getImageData(0, 0, canvas6.width, canvas6.height);
+      lib.infinit(imageData, 175, 175, 40, 190, 126, 25);
+      ctx.putImageData(imageData, 0, 0);
+
+      // DIAMOND
+      var canvas7 = document.querySelector("#canvas7");
+      var ctx = canvas7.getContext("2d");
+      var imageData = ctx.getImageData(0, 0, canvas7.width, canvas7.height);
+      lib.diamond(imageData, 120, 118, 30, 101, 135, 0);
+      ctx.putImageData(imageData, 0, 0);
+
+      // BINTANG
+      var canvas8 = document.querySelector("#canvas8");
+      var ctx = canvas8.getContext("2d");
+      var imageData = ctx.getImageData(0, 0, canvas8.width, canvas8.height);
+      lib.bintang(imageData, 175, 175, 100, 207, 200, 4);
+      lib.floodFillStack(
+        imageData,
+        canvas8,
+        180,
+        187,
+        { r: 0, g: 0, b: 0 },
+        { r: 207, g: 200, b: 4 }
+      );
+      ctx.putImageData(imageData, 0, 0);
+
+      // SNAKE EYE
+      var canvas9 = document.querySelector("#canvas9");
+      var ctx = canvas9.getContext("2d");
+      var imageData = ctx.getImageData(0, 0, canvas9.width, canvas9.height);
+      lib.ellips_polar(imageData, 175, 175, 130, 60, 115, 115, 114);
+      lib.ellips_polar(imageData, 175, 175, 125, 55, 115, 115, 114);
+      lib.ellips_polar(imageData, 175, 175, 10, 48, 207, 200, 4);
+      lib.floodFillStack(
+        imageData,
+        canvas9,
+        169,
+        120,
+        { r: 0, g: 0, b: 0 },
+        { r: 115, g: 115, b: 114 }
+      );
+      lib.floodFillStack(
+        imageData,
+        canvas9,
+        260,
+        157,
+        { r: 0, g: 0, b: 0 },
+        { r: 156, g: 156, b: 156 }
+      );
+      lib.floodFillStack(
+        imageData,
+        canvas9,
+        181,
+        153,
+        { r: 0, g: 0, b: 0 },
+        { r: 84, g: 81, b: 3 }
+      );
+      lib.ellips_polar(imageData, 175, 175, 30, 50, 207, 200, 4);
+      lib.floodFillStack(
+        imageData,
+        canvas9,
+        194,
+        161,
+        { r: 156, g: 156, b: 156 },
+        { r: 207, g: 200, b: 4 }
+      );
+
+      ctx.putImageData(imageData, 0, 0);
+
+      // canvas1.addEventListener('click', function (event) {
+      //       var rect = canvas1.getBoundingClientRect();
+      //       var x = event.clientX - rect.left;
+      //       var y = event.clientY - rect.top;
+
+      //       console.log(Math.round(x) + ", " + Math.round(y) + ", ");
+
+      //   });
+
+    </script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

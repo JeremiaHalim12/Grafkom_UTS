@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <title>Library Grafika Komputer</title>
+    <style>
+        #welcome {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 90vh;
+            position: absolute;
+            z-index: 1;
+            width: 100%;
+            
+        }
+
+        canvas {
+            position: absolute;
+            height: fit-content;
+            width: fit-content;
+        }
+
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 50px;
+            font-weight: bold;
+        }
+
+        h2 {
+            font-size: 45px;
+            font-weight: bold;
+        }
+
+        .navbar {
+            top: 0;
+        }
+        
+        body {
+            background-image: linear-gradient(to right, #ff6666 , #99ff66, #ff6666);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-primary sticky-top bg-body-tertiary" data-bs-theme="dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">GRAFIKA KOMPUTER 2D</a>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    <a class="nav-link" href="bentuk2d.html">2D Shape</a>
+                    <a class="nav-link" href="animasi2d.html">2D Animation</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="container text-center" id="welcome">
+        <div class="row">
+            <div class="col text-center">
+                <h1>WELCOME TO</h1>
+            </div>
+            <div class="row">
+                <div class="col text-center">
+                    <h2>LIBRARY GRAFIKA KOMPUTER</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <canvas id="myCanvas"></canvas>
+    <script type="module">
+        import * as lib from "./index.js";
+
+        var myCanvas;
+
+        myCanvas = document.querySelector("#myCanvas");
+        myCanvas.width = window.innerWidth - 21;
+        myCanvas.height = window.innerHeight - 56;
+
+        var ctx = myCanvas.getContext("2d");
+        var imageData = ctx.getImageData(0, 0, myCanvas.width, myCanvas.height);
+
+        function geser(posisi_awal, geser) {
+            let [xc, yc] = posisi_awal;
+            let { ox, oy } = geser;
+            let x = xc + ox;
+            let y = yc + oy;
+
+            return [x, y];
+        }
+
+        function boundaryFillStack(imgData, posisi, batas, warna) {
+            let { x, y } = posisi;
+            let warna_titik_skrg = get_warna_titik(imgData, posisi);
+
+            let stack = [];
+            stack.push(posisi);
+
+            while (stack.length > 0) {
+                posisi = stack.pop();
+                warna_titik_skrg = get_warna_titik(imgData, posisi);
+                if ((posisi.x > 0) && (posisi.x < myCanvas.width) && (posisi.y > 0) && (posisi.y < myCanvas.height)) {
+                    if (!cekWarna(warna_titik_skrg, batas) && !cekWarna(warna_titik_skrg, warna)) {
+                        gbr_titik(imgData, posisi, warna);
+                        stack.push({ x: posisi.x + 1, y: posisi.y });
+                        stack.push({ x: posisi.x - 1, y: posisi.y });
+                        stack.push({ x: posisi.x, y: posisi.y + 1 });
+                        stack.push({ x: posisi.x, y: posisi.y - 1 });
+                    }
+                }
+            }
+        }
+
+        function cekWarna(warna_titik_skrg, batas) {
+            if ((warna_titik_skrg.r == batas.r) && (warna_titik_skrg.g == batas.g) && (warna_titik_skrg.b == batas.b)) {
+                return true;
+            } else {
+                false;
+            }
+
+        }
+
+        function get_warna_titik(imgData, posisi) {
+            let { x, y } = posisi;
+            let index = (x + y * myCanvas.width) * 4;
+
+            let r, g, b;
+
+            r = imgData.data[index];
+            g = imgData.data[index + 1];
+            b = imgData.data[index + 2];
+
+            return { r: r, g: g, b: b };
+        }
+
+        function gbr_titik(imgData, posisi, warna) {
+            let { x, y } = posisi;
+            let { r, g, b } = warna;
+            let index = (x + y * myCanvas.width) * 4;
+
+            imgData.data[index] = r;
+            imgData.data[index + 1] = g;
+            imgData.data[index + 2] = b;
+            imgData.data[index + 3] = 255;
+
+        }
+
+        function lingkaran(imgData, xc, yc, radius, warnanya) {
+            let [r, g, b] = warnanya;
+
+            for (let theta = 0; theta < 90; theta += 1 / radius) {
+                let x = radius * (Math.cos(theta * Math.PI / 180));
+                let y = radius * (Math.sin(theta * Math.PI / 180));
+
+                gbr_titik(imgData, { x: Math.round(x + xc), y: Math.round(y + yc) }, { r: r, g: g, b: b });
+                gbr_titik(imgData, { x: Math.round(x + xc), y: Math.round(-y + yc) }, { r: r, g: g, b: b });
+                gbr_titik(imgData, { x: Math.round(-x + xc), y: Math.round(y + yc) }, { r: r, g: g, b: b });
+                gbr_titik(imgData, { x: Math.round(-x + xc), y: Math.round(-y + yc) }, { r: r, g: g, b: b });
+            }
+        }
+
+        let arrTitik = [];
+
+        for (let i = 0; i < 100; i++) {
+            let posX = Math.floor(Math.random() * 900) + 100;
+            let posY = Math.floor(Math.random() * 400) + 100;
+            let ax = Math.floor(Math.random() * 2) + 1 * (Math.round(Math.random()) ? 1 : -1);
+            let ay = Math.floor(Math.random() * 5) + 1 * (Math.round(Math.random()) ? 1 : -1);
+            let r = Math.floor(Math.random() * 250) + 5;
+            let g = Math.floor(Math.random() * 250) + 5;
+            let b = Math.floor(Math.random() * 250) + 5;
+
+            arrTitik.push([posX, posY, ax, ay, r, g, b])
+        }
+
+        function lingkaran_jalan() {
+            ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+            imageData = ctx.getImageData(0, 0, myCanvas.width, myCanvas.height);
+
+            for (let i = 0; i < arrTitik.length; i++) {
+
+                let x1 = arrTitik[i][0];
+                let y1 = arrTitik[i][1];
+                let ax = arrTitik[i][2];
+                let ay = arrTitik[i][3];
+
+                lingkaran(imageData, x1, y1, 10, [arrTitik[i][4], arrTitik[i][5], arrTitik[i][6]]);
+                boundaryFillStack(imageData, { x: x1, y: y1 }, { r: arrTitik[i][4], g: arrTitik[i][5], b: arrTitik[i][6] }, { r: arrTitik[i][4], g: arrTitik[i][5], b: arrTitik[i][6] })
+
+                if (x1 < 15 || x1 > (myCanvas.width - 10)) {
+                    arrTitik[i][2] = -ax;
+                } else if (y1 < 15 || y1 > (myCanvas.height - 10)) {
+                    arrTitik[i][3] = -ay;
+                }
+
+
+                [arrTitik[i][0], arrTitik[i][1]] = geser([x1, y1], { ox: arrTitik[i][2], oy: arrTitik[i][3] });
+            }
+
+            requestAnimationFrame(lingkaran_jalan);
+
+            ctx.putImageData(imageData, 0, 0);
+        }
+
+        lingkaran_jalan();
+        ctx.putImageData(imageData, 0, 0);
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
