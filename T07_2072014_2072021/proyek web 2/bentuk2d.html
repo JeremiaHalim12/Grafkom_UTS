@@ -31,6 +31,10 @@
 
       .canvas-row2 {
         margin-top: 45px;
+      }
+
+      .canvas-row3 {
+        margin-top: 45px;
         margin-bottom: 45px;
       }
 
@@ -121,6 +125,17 @@
         <div class="col">
           <h5>Snake Eye</h5>
           <canvas id="canvas9" width="350" height="350"></canvas>
+        </div>
+      </div>
+      <div class="row canvas-row3">
+        <div class="col">
+          <h5>Infinite Circle</h5>
+          <canvas id="canvas10" width="350" height="350"></canvas>
+        </div>
+        <div class="col"></div>
+        <div class="col">
+          <h5>Onion</h5>
+          <canvas id="canvas11" width="350" height="350"></canvas>
         </div>
       </div>
     </div>
@@ -293,15 +308,20 @@
 
       ctx.putImageData(imageData, 0, 0);
 
-      // canvas1.addEventListener('click', function (event) {
-      //       var rect = canvas1.getBoundingClientRect();
-      //       var x = event.clientX - rect.left;
-      //       var y = event.clientY - rect.top;
 
-      //       console.log(Math.round(x) + ", " + Math.round(y) + ", ");
+      // INFINITE CIRCLE
+      var canvas10 = document.querySelector("#canvas10");
+      var ctx = canvas10.getContext("2d");
+      var imageData = ctx.getImageData(0, 0, canvas10.width, canvas10.height);
+      lib.spehere(imageData, 65, 65, 110, 200, 160, 210);
+      ctx.putImageData(imageData, 0, 0);
 
-      //   });
-
+      // ONION
+      var canvas11 = document.querySelector("#canvas11");
+      var ctx = canvas11.getContext("2d");
+      var imageData = ctx.getImageData(0, 0, canvas11.width, canvas11.height);
+      lib.onion(imageData, 280, 280, 100, 138, 20, 34);
+      ctx.putImageData(imageData, 0, 0);
     </script>
 
     <script

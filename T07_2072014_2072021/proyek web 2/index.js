@@ -72,7 +72,7 @@ export function lingkaran(imgData, xc, yc, radius, r, g, b) {
 
 export function lingkaran_polar(imgData, xc, yc, radius, r, g, b) {
 
-    for (let theta = 0; theta < Math.PI * 2; theta += 0.01) {
+    for (let theta = 0; theta < Math.PI * 10; theta += 0.01) {
         let x = xc + radius * Math.cos(theta);
         let y = yc + radius * Math.sin(theta);
 
@@ -157,6 +157,25 @@ export function diamond(imgData, xc, yc, radius, r, g, b) {
     for (let theta = 0; theta < Math.PI; theta += 0.0001) {
         let x = xc + (radius + 30 * Math.cos(radius * theta) * Math.sin(theta*2)) * 2;
         let y = yc + (radius + 70 * Math.sin(radius * theta) * Math.cos(theta*2)) * 2;
+
+        titik(imgData, x, y, r, g, b);
+    }
+}
+
+export function spehere(imgData, xc, yc, radius, r, g, b) {
+
+    for (let theta = 0; theta < Math.PI; theta += 0.0001) {
+        let x = xc + (radius + 120 * Math.cos(radius * theta) * Math.cos(radius + theta));
+        let y = yc + (radius + 120 * Math.sin(radius * theta) * Math.cos(radius + theta));
+
+        titik(imgData, x, y, r, g, b);
+    }
+}
+
+export function onion(imgData, xc, yc, radius, r, g, b) {
+    for (let theta = 0; theta < Math.PI; theta += 0.0001) {
+        let x = xc - (radius + 100 * Math.cos(radius * theta) * Math.cos(radius + theta * 2));
+        let y = yc - (radius + 100 * Math.sin(radius * theta) + Math.sin(radius + theta * 2));
 
         titik(imgData, x, y, r, g, b);
     }

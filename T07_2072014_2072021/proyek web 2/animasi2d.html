@@ -27,11 +27,16 @@
 
       .canvas-row1 {
         margin-top: 45px;
+        margin-bottom: 45px;
       }
 
-      .canvas-row2 {
-        margin-top: 45px;
-        margin-bottom: 45px;
+      .canvas-row-button {
+        margin-top: -70px;
+      }
+
+      .col-button {
+        margin-top: 30px;
+        margin-bottom: 30px;
       }
 
       .navbar {
@@ -41,9 +46,60 @@
         top: 0;
       }
 
-      body{
-        background-image: linear-gradient(to right, #ff6666 , #99ff66, #ff6666);
+      body {
+        background-image: linear-gradient(to right, #ff6666, #99ff66, #ff6666);
       }
+
+      .buttonstart {
+        background-color: white;
+        border: 2px solid #04aa6d;
+        color: black;
+        padding: 8px 30px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        border-radius: 12px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        box-shadow: 0 9px #999;
+      }
+
+      .buttonstart:hover {
+        background-color: #04aa6d;
+        color: white;
+      }
+
+      .buttonstart:active {
+        box-shadow: 0 5px #666;
+        transform: translateY(4px);
+      }
+
+      .buttonclear {
+        background-color: white;
+        border: 2px solid #f44336;
+        color: black;
+        padding: 8px 30px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        border-radius: 12px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        box-shadow: 0 9px #999;
+      }
+
+      .buttonclear:hover {
+        background-color: #f44336;
+        color: white;
+      }
+
+      .buttonclear:active {
+        box-shadow: 0 5px #666;
+        transform: translateY(4px);
+      }
+
     </style>
   </head>
 
@@ -58,73 +114,247 @@
           <div class="navbar-nav">
             <a class="nav-link" href="index.html">Home</a>
             <a class="nav-link" href="bentuk2d.html">2D Shape</a>
-            <a class="nav-link active" aria-current="page" href="#">2D Animation</a>
+            <a class="nav-link active" aria-current="page" href="#"
+              >2D Animation</a
+            >
           </div>
         </div>
       </div>
     </nav>
     <div class="container text-center">
-      <br>
-        <br>
-        <div class="row">
-            <div class="col"></div>
-            <div class="col">
-              <h1>2D ANIMATION</h1>
-            </div>
-            <div class="col"></div>
-          </div>
+      <br />
+      <br />
+      <div class="row">
+        <div class="col"></div>
+        <div class="col">
+          <h1>2D ANIMATION</h1>
+        </div>
+        <div class="col"></div>
+      </div>
       <div class="row canvas-row">
         <div class="col">
-          <h5>Canvas 1</h5>
-          <canvas width="350" height="350"></canvas>
+          <h5>Click Me!</h5>
+          <canvas id="canvas1" width="350" height="350"></canvas>
         </div>
         <div class="col">
-          <br>
-          <br>
-          <br>
-          <h5>Canvas 2</h5>
-          <canvas width="350" height="350"></canvas>
+          <br />
+          <br />
+          <br />
+          <h5>Sound On</h5>
+          <canvas id="canvas2" width="350" height="350"></canvas>
         </div>
         <div class="col">
-          <h5>Canvas 3</h5>
-          <canvas width="350" height="350"></canvas>
+          <h5>Click Start!</h5>
+          <canvas id="canvas3" width="350" height="350"></canvas>
+        </div>
+      </div>
+      <div class="row canvas-row-button">
+        <div class="col"></div>
+        <div class="col"></div>
+        <div class="col">
+          <button class="buttonstart" type="button" onclick="start()">
+            Start
+          </button>
         </div>
       </div>
       <div class="row canvas-row1">
+        <div class="col"></div>
         <div class="col">
-          <h5>Canvas 4</h5>
-          <canvas width="350" height="350"></canvas>
+          <br />
+          <br />
+          <br />
+          <h5>Click Me!</h5>
+          <canvas id="canvas4" width="350" height="350"></canvas>
         </div>
-        <div class="col">
-          <br>
-          <br>
-          <br>
-          <h5>Canvas 5</h5>
-          <canvas width="350" height="350"></canvas>
-        </div>
-        <div class="col">
-          <h5>Canvas 6</h5>
-          <canvas width="350" height="350"></canvas>
-        </div>
+        <div class="col"></div>
       </div>
-      <div class="row canvas-row2">
-        <div class="col">
-          <h5>Canvas 7</h5>
-          <canvas width="350" height="350"></canvas>
+      <div class="row canvas-row-button">
+        <div class="col"></div>
+        <div class="col col-button">
+          <button class="buttonclear" type="button" onclick="resetcanvas()">
+            Clear
+          </button>
         </div>
-        <div class="col">
-          <br>
-          <br>
-          <br>
-          <h5>Canvas 8</h5>
-          <canvas width="350" height="350"></canvas>
-        </div>
-        <div class="col">
-          <h5>Canvas 9</h5>
-          <canvas width="350" height="350"></canvas>
-        </div>
+        <div class="col"></div>
       </div>
     </div>
+
+    <script type="module">
+      import * as lib from "./index.js";
+
+      // CANVAS 1
+      var canvas1 = document.querySelector("#canvas1");
+      var ctx = canvas1.getContext("2d");
+      var imageData = ctx.getImageData(0, 0, canvas1.width, canvas1.height);
+      var x = null;
+      var y = null;
+      canvas1.addEventListener("click", function (event) {
+        var rect = canvas1.getBoundingClientRect();
+        var x1 = event.clientX - rect.left;
+        var y1 = event.clientY - rect.top;
+        var n = 10;
+        var interval = setInterval(bulat, 12);
+        function bulat() {
+          ctx.clearRect(0, 0, canvas1.width, canvas1.height);
+          imageData = ctx.getImageData(0, 0, canvas1.width, canvas1.height);
+
+          if (n == 150) {
+            clearInterval(interval);
+          } else {
+            lib.lingkaran_polar(imageData, x1, y1, n, 108, 166, 168);
+            n += 0.5;
+          }
+          ctx.putImageData(imageData, 0, 0);
+        }
+      });
+    </script>
+
+    <script type="module">
+      import * as lib from "./index.js";
+
+      // CANVAS 2
+      var canvas2 = document.querySelector("#canvas2");
+      var ctx = canvas2.getContext("2d");
+      var imageData = ctx.getImageData(0, 0, canvas2.width, canvas2.height);
+      function gambar() {
+        ctx.clearRect(0, 0, canvas2.width, canvas2.height);
+        imageData = ctx.getImageData(0, 0, canvas2.width, canvas2.height);
+        for (let i = 0; i < 250; i++) {
+          var random = Math.floor(Math.random() * 280);
+          var red = Math.floor(Math.random() * 256);
+          var green = Math.floor(Math.random() * 240);
+          var blue = Math.floor(Math.random() * 120);
+          if (i % 2 == 0) {
+            lib.dda_line(
+              imageData,
+              i * 4,
+              400,
+              i * 4,
+              random,
+              red,
+              green,
+              blue
+            );
+          }
+        }
+        ctx.putImageData(imageData, 0, 0);
+      }
+      setInterval(gambar, 1000);
+    </script>
+
+    <script type="module">
+      import * as lib from "./index.js";
+
+      // CANVAS 3
+      var canvas3 = document.querySelector("#canvas3");
+      var ctx = canvas3.getContext("2d");
+      var imageData = ctx.getImageData(0, 0, canvas3.width, canvas3.height);
+
+      function gambar() {
+        let point_array = [
+          { x: 23, y: 200 },
+          { x: 23, y: 160 },
+          { x: 300, y: 160 },
+          { x: 300, y: 200 },
+        ];
+        lib.polygon(imageData, point_array, 255, 114, 143);
+        lib.floodFillStack(
+          imageData,
+          canvas3,
+          161,
+          13,
+          { r: 0, g: 0, b: 0 },
+          { r: 255, g: 253, b: 208 }
+        );
+        lib.floodFillStack(
+          imageData,
+          canvas3,
+          89,
+          161,
+          { r: 0, g: 0, b: 0 },
+          { r: 255, g: 114, b: 143 }
+        );
+      }
+      function load(x) {
+        if (x < 278) {
+          lib.dda_line(imageData, 23 + x, 160, 23 + x, 201, 142, 114, 143);
+          ctx.putImageData(imageData, 0, 0);
+          x++;
+          setTimeout(function () {
+            load(x);
+          }, 10);
+          ctx.font = "bolder 15px Courier New";
+          ctx.fillText("Loading...", 23, 150);
+          x == 0;
+        } else {
+          ctx.putImageData(imageData, 0, 0);
+          ctx.font = "bolder 15px Courier New";
+          ctx.fillText("Loading...", 23, 150);
+        }
+      }
+      function reset(x) {
+        if (x < 278) {
+          lib.dda_line(imageData, 23 + x, 160, 23 + x, 201, 255, 114, 143);
+          ctx.putImageData(imageData, 0, 0);
+          x++;
+          setTimeout(function () {
+            load(x);
+          }, 10);
+          ctx.font = "bolder 15px Courier New";
+          ctx.fillText("Loading...", 23, 150);
+          x == 0;
+        } else {
+          ctx.putImageData(imageData, 0, 0);
+          ctx.font = "bolder 15px Courier New";
+          ctx.fillText("Loading...", 23, 150);
+        }
+      }
+      gambar();
+      ctx.putImageData(imageData, 0, 0);
+      ctx.font = "bolder 15px Courier New";
+      ctx.fillText("Loading...", 23, 150);
+      window.start = function () {
+        load(0);
+        ctx.clearRect(0, 0, canvas2.width, canvas2.height);
+        imageData = ctx.getImageData(0, 0, canvas2.width, canvas2.height);
+        gambar();
+      };
+    </script>
+
+    <script type="module">
+      import * as lib from "./index.js";
+
+      // CANVAS 4
+      var canvas4 = document.querySelector("#canvas4");
+      var ctx = canvas4.getContext("2d");
+      var imageData = ctx.getImageData(0, 0, canvas4.width, canvas4.height);
+      canvas4.addEventListener("click", function (event) {
+        var rect = canvas4.getBoundingClientRect();
+        var x = event.clientX - rect.left;
+        var y = event.clientY - rect.top;
+        var radius = 0;
+        var maxRadius = 20;
+        var r = Math.floor(Math.random() * 256);
+        var g = Math.floor(Math.random() * 256);
+        var b = Math.floor(Math.random() * 256);
+        function animateCircle() {
+          if (radius <= maxRadius) {
+            lib.lingkaran_polar(imageData, x, y, radius, r, g, b);
+            ctx.putImageData(imageData, 0, 0);
+            radius++;
+            lib.lingkaran_polar(imageData, x, y, radius, r, g, b);
+            animationId = requestAnimationFrame(animateCircle);
+          }
+        }
+        animateCircle();
+        ctx.putImageData(imageData, 0, 0);
+      });
+      window.resetcanvas = function () {
+        ctx.clearRect(0, 0, canvas4.width, canvas4.height);
+        imageData = ctx.getImageData(0, 0, canvas4.width, canvas4.height);
+      };
+    </script>
+
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
