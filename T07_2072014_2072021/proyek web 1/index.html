@@ -22,10 +22,13 @@
     <script>
         const canvas = document.getElementById('chart-container');
         const ctx = canvas.getContext('2d');
+        let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        
         let data = []; // This variable will hold the data
         let yearCounts = {}; // Object to store the counts for each year
         let bars = []; // Array to store bar information
         let order = 'ascending'; // Default order is ascending
+
         const startYear = 2012;
         const endYear = 2017;
         const maxBarHeight = canvas.height; // Maximum bar height
@@ -68,11 +71,10 @@
             .catch(error => console.error('Error loading CSV data:', error));
 
         let percentage = 0;
-        let isAscending = true; // Determine whether the animation is currently going up or down
-
-
+        let isAscending = true; 
+        
         function animate() {
-            if (percentage <= 100 && isAscending) {
+            if (isAscending || !isAscending) {
                 // Calculate the number of bars to fill
                 const totalBars = bars.length;
                 const barsToFill = Math.floor((percentage / 100) * totalBars);
@@ -90,43 +92,13 @@
                 }
 
                 drawEmptyChart();
-
+            
                 ctx.font = "15px Georgia";
 
                 setTimeout(function () {
                     percentage += 1;
                     requestAnimationFrame(animate);
                 }, 100);
-            } else if (percentage >= 0 && !isAscending) {
-                // Calculate the number of bars to fill
-                const totalBars = bars.length;
-                const barsToFill = Math.floor((percentage / 100) * totalBars);
-
-                // Sort the bars based on the selected order
-                if (order === 'ascending') {
-                    bars.sort((a, b) => a.count - b.count);
-                } else {
-                    bars.sort((a, b) => b.count - a.count);
-                }
-
-                for (let i = 0; i < barsToFill; i++) {
-                    const bar = bars[i];
-                    bar.count = yearCounts[bar.year];
-                }
-
-                drawEmptyChart();
-
-                ctx.font = "15px Georgia";
-
-                setTimeout(function () {
-                    percentage += 1;
-                    requestAnimationFrame(animate);
-                }, 100);
-            } else {
-                // Toggle the direction when the animation reaches the top or bottom
-                isAscending = !isAscending;
-                // Add a delay before changing direction
-                setTimeout(animate, 5000);
             }
         }
 
@@ -136,8 +108,11 @@
             order = orderSelect.value;
             // Restart the animation when order is changed
             isAscending = true;
-            animate()
+            percentage = 0; // Reset the percentage
+            animate();
         });
+
+        // Initial animation when the website is loaded
         animate();
     </script>
 </body>
