@@ -99,7 +99,6 @@
         box-shadow: 0 5px #666;
         transform: translateY(4px);
       }
-
     </style>
   </head>
 
@@ -339,10 +338,11 @@
         var b = Math.floor(Math.random() * 256);
         function animateCircle() {
           if (radius <= maxRadius) {
+            // ctx.clearRect(0, 0, canvas4.width, canvas4.height);
+            // imageData = ctx.getImageData(0, 0, canvas4.width, canvas4.height);
             lib.lingkaran_polar(imageData, x, y, radius, r, g, b);
             ctx.putImageData(imageData, 0, 0);
             radius++;
-            lib.lingkaran_polar(imageData, x, y, radius, r, g, b);
             animationId = requestAnimationFrame(animateCircle);
           }
         }
