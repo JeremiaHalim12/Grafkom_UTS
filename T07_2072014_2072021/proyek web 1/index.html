@@ -1,120 +1,120 @@
 <!DOCTYPE html>
-<html>
-
-<head>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Data Visualization</title>
     <style>
-        canvas {
-            border: 2px black solid;
-        }
+      canvas {
+        border: 2px black solid;
+      }
+
+      body {
+        position: relative;
+        background-image: linear-gradient(to right, #ff6666, #99ff66, #ff6666);
+        font-family: Arial, Helvetica, sans-serif;
+        margin-bottom: 10px;
+      }
     </style>
     <script src="index.js"></script>
-</head>
+  </head>
 
-<body>
+  <body>
+    <h1>Jumlah Lego Sets per Tahun</h1>
     <canvas id="chart-container" width="1000" height="700"></canvas>
-    <label for="orderSelect">Order:</label>
-    <select id="orderSelect">
-        <option value="ascending">Ascending</option>
-        <option value="descending">Descending</option>
+    <label for="orderSelect" style="font-weight: 600">Order:</label>
+    <select id="orderSelect" class="custom-select" style="width: 200px">
+      <option value="ascending">Ascending</option>
+      <option value="descending">Descending</option>
     </select>
 
     <script>
-        const canvas = document.getElementById('chart-container');
-        const ctx = canvas.getContext('2d');
-        let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        
-        let data = []; // This variable will hold the data
-        let yearCounts = {}; // Object to store the counts for each year
-        let bars = []; // Array to store bar information
-        let order = 'ascending'; // Default order is ascending
+      const canvas = document.getElementById("chart-container");
+      const ctx = canvas.getContext("2d");
+      let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-        const startYear = 2012;
-        const endYear = 2017;
-        const maxBarHeight = canvas.height; // Maximum bar height
+      let data = [];
+      let yearCounts = {};
+      let bars = [];
+      let order = "ascending";
 
-        // Fetch CSV data and parse it
-        fetch('data.csv')
-            .then(response => response.text())
-            .then(csvData => {
-                const rows = csvData.split('\n');
-                const headers = rows[0].split(',');
+      const startYear = 2012;
+      const endYear = 2017;
+      const maxBarHeight = canvas.height;
 
-                for (let i = 1; i < rows.length; i++) {
-                    const values = rows[i].split(',');
-                    const rowData = {};
+      fetch("data.csv")
+        .then((response) => response.text())
+        .then((csvData) => {
+          const rows = csvData.split("\n");
+          const headers = rows[0].split(",");
 
-                    for (let j = 0; j < headers.length; j++) {
-                        rowData[headers[j]] = values[j];
-                    }
+          for (let i = 1; i < rows.length; i++) {
+            const values = rows[i].split(",");
+            const rowData = {};
 
-                    data.push(rowData);
-                }
-
-                // Calculate year counts for years within the range
-                data.forEach(item => {
-                    const year = parseInt(item.year);
-                    if (year >= startYear && year <= endYear) {
-                        yearCounts[year] = (yearCounts[year] || 0) + 1;
-                    }
-                });
-
-                // Prepare bars
-                for (const year in yearCounts) {
-                    bars.push({
-                        year: year,
-                        count: 0,
-                    });
-                }
-
-            })
-            .catch(error => console.error('Error loading CSV data:', error));
-
-        let percentage = 0;
-        let isAscending = true; 
-        
-        function animate() {
-            if (isAscending || !isAscending) {
-                // Calculate the number of bars to fill
-                const totalBars = bars.length;
-                const barsToFill = Math.floor((percentage / 100) * totalBars);
-
-                // Sort the bars based on the selected order
-                if (order === 'ascending') {
-                    bars.sort((a, b) => a.count - b.count);
-                } else {
-                    bars.sort((a, b) => b.count - a.count);
-                }
-
-                for (let i = 0; i < barsToFill; i++) {
-                    const bar = bars[i];
-                    bar.count = yearCounts[bar.year];
-                }
-
-                drawEmptyChart();
-            
-                ctx.font = "15px Georgia";
-
-                setTimeout(function () {
-                    percentage += 1;
-                    requestAnimationFrame(animate);
-                }, 100);
+            for (let j = 0; j < headers.length; j++) {
+              rowData[headers[j]] = values[j];
             }
-        }
 
-        // Read the selected order and trigger the animation
-        const orderSelect = document.getElementById('orderSelect');
-        orderSelect.addEventListener('change', () => {
-            order = orderSelect.value;
-            // Restart the animation when order is changed
-            isAscending = true;
-            percentage = 0; // Reset the percentage
-            animate();
+            data.push(rowData);
+          }
+
+          data.forEach((item) => {
+            const year = parseInt(item.year);
+            if (year >= startYear && year <= endYear) {
+              yearCounts[year] = (yearCounts[year] || 0) + 1;
+            }
+          });
+
+          for (const year in yearCounts) {
+            bars.push({
+              year: year,
+              count: 0,
+            });
+          }
+
+          animate();
         });
 
-        // Initial animation when the website is loaded
-        animate();
-    </script>
-</body>
+      let percentage = 0;
+      let isAscending = true;
 
+      function animate() {
+        if (isAscending || !isAscending) {
+          const totalBars = bars.length;
+          const barsToFill = Math.floor((percentage / 100) * totalBars);
+
+          if (order === "ascending") {
+            bars.sort((a, b) => a.count - b.count);
+          } else {
+            bars.sort((a, b) => b.count - a.count);
+          }
+
+          for (let i = 0; i < barsToFill; i++) {
+            const bar = bars[i];
+            bar.count = yearCounts[bar.year];
+          }
+
+          drawEmptyChart();
+
+          ctx.font = "15px Arial";
+
+          setTimeout(function () {
+            percentage += 1;
+            requestAnimationFrame(animate);
+          }, 100);
+        }
+      }
+
+      const orderSelect = document.getElementById("orderSelect");
+      orderSelect.addEventListener("change", () => {
+        order = orderSelect.value;
+        isAscending = true;
+        percentage = 0;
+        // animate();
+      });
+
+      animate();
+    </script>
+  </body>
 </html>
